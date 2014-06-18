@@ -16,6 +16,15 @@ Heading is passed in degrees, with north being 0/360 degrees.
 
 Speed is reported in metres per second at ground level.
 
+Test endpoint
+=============
+
+.. function:: GET /test
+
+   Tests connectivity and authentication to the stackptr API.
+
+   Returns the username that the API key is for.
+
 Update location
 ===============
 

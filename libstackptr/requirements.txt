@@ -1,0 +1,8 @@
+# Need SNI support
+# https://github.com/kennethreitz/requests/issues/749#issuecomment-19187417
+pyopenssl>=0.13
+ndg-httpsclient>=0.3.2
+pyasn1>=0.1.6
+
+# Because fuck urllib
+requests
