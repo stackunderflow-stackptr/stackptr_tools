@@ -67,7 +67,7 @@ class StackPtrClient(object):
 			response = requests.get(path, params={'apikey': self._api_key})
 		else:
 			params['apikey'] = self._api_key
-			response = requests.post(path, params=params)
+			response = requests.post(path, data=params)
 		
 		if json:
 			return response.json(use_decimal=True)

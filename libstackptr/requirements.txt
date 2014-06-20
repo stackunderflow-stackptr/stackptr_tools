@@ -6,3 +6,5 @@ pyasn1>=0.1.6
 
 # Because fuck urllib
 requests
+
+gpxpy
