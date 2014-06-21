@@ -9,7 +9,7 @@ License: 3-clause BSD, see COPYING
 from __future__ import absolute_import
 from . import StackPtrClient
 from argparse import ArgumentParser, FileType
-import gpxpy, datetime, pytz, time, random
+import gpxpy, datetime, pytz, time, random, requests
 
 
 def play_gpx(client, gpx_fh):
@@ -32,34 +32,41 @@ def play_gpx(client, gpx_fh):
 		if delta > 0:
 			print 'napping for %.2f second(s)...' % delta
 			time.sleep(delta)
+		elif delta < 0:
+			print 'skipping point, we are %0.2f second(s) late...' % delta
+			continue
 
-		client.update(point.latitude, point.longitude, point.elevation)
-		print point
+		try:
+			client.update(point.latitude, point.longitude, point.elevation)
+			print point
+		except requests.exceptions.ConnectionError, e:
+			print 'Failure posting update, %r' % e
+
 
 
 
 def main():
 	parser = ArgumentParser()
-	
+
 	parser.add_argument('api_key',
 		help='API key to use',
 		nargs=1
 	)
-	
+
 	parser.add_argument('gpx_file',
 		help='GPX track file to play, using the first track and first segment in the file.',
 		type=FileType('rb'),
 		nargs='+'
 	)
-	
+
 	parser.add_argument('-s', '--shuffle', action='store_true')
-	
+
 	options = parser.parse_args()
-	
+
 	client = StackPtrClient(options.api_key)
 	if options.shuffle:
 		random.shuffle(options.gpx_file)
-		
+
 	for f in options.gpx_file:
 		print "playing %s" % f
 		play_gpx(client, f)
