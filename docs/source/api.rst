@@ -56,7 +56,8 @@ Update location
 .. class:: Extra
 	
    :param string bat: Battery life between 0.0 and 1.0.
-   :param string bst: Battery status: ``charge``, ``full`` or ``discharge``.
+   :param string bst: Battery status: ``charging``, ``full`` or ``discharging``.
+   :param string prov: Location provider name.
 
 Users list
 ==========
