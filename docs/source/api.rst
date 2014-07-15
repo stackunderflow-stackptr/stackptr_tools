@@ -22,8 +22,20 @@ Test endpoint
 .. function:: GET /test
 
    Tests connectivity and authentication to the stackptr API.
+   
+   Useful to see if the API key provided to your app is correct.
 
-   Returns the username that the API key is for.
+   Returns the username that the API key is for, but what exactly is returned will likely change.
+
+
+CSRF
+====
+
+.. function:: GET /csrf
+
+	Returns a CSRF token. All requests made with API keys are exempt from CSRF checks, so you'll only need this to POST to /login and create an API key for your app yourself.
+	
+	This is not the recommended way of doing it, and this function may be removed in future.
 
 Update location
 ===============
@@ -34,13 +46,17 @@ Update location
 
    :param float lat: Your current latitude.
    :param float lon: Your current longitude.
-   :param float alt: Your current altitude, if known.  Report ``0`` if unknown.
-   :param float hdg: Your current heading, if known.  Report ``-1``, and do not report speed, if heading is unknown.
-   :param float spd: Your current speed, if unknown.  Report ``-1`` if unknown or if heading is unknown.
+   :param float alt: Your current altitude, if known.  Omit parameter if unknown.
+   :param float hdg: Your current heading, if known.  Omit parameter if unknown.
+   :param float spd: Your current speed, if known.  Omit parameter if unknown.
+   :param string ext: A JSON dict of additional optional information.
 
-   In response, the server will send your latitude and longitude encoded as follows, but do not expect a response::
+   In response, the server will send back ``OK``. Anything else indicates an error.
 
-      lat: -34.0; lon: 137.0
+.. class:: Extra
+	
+   :param string bat: Battery life between 0.0 and 1.0.
+   :param string bst: Battery status: ``charge``, ``full`` or ``discharge``.
 
 Users list
 ==========
@@ -76,4 +92,50 @@ Users list
    
    .. data:: lastupd
    
-      Number of seconds ago that the location was recorded.
+      Time of last update, in seconds since UNIX epoch in UTC.
+
+Group Data
+==========
+
+.. function:: POST /groupdata
+	
+	Gets a dict of the data (placemarks etc) for a group. The key for the dict is the object's ID (unique across all groups) and the value is a :class:`GroupData` item.
+	
+	:param int group: The group ID you want data for (not implemented yet, there is only one group)
+	
+.. class:: GroupData
+
+	Structure representing an object in a group like a placemark, line or polygon.
+	
+	.. data:: name
+	
+	Name of the item.
+	
+	.. data:: owner
+	
+	Username of the owner / creator of the object.
+	
+	.. data:: json
+	
+	GeoJSON representing the object as it is to be drawn on the map.
+
+.. function:: POST /addfeature
+	
+	Adds a new item to the group.
+	
+	:param string name: Name for object (not implemented yet, defaults to untitled)
+	:param string geojson: GeoJSON representation of the object
+
+.. function:: POST /delfeature
+	
+	Deletes an item in the group.
+	
+	:param int id: ID of object to delete
+
+.. function:: POST /renamefeature
+
+	Renames an item in the group.
+	
+	:param int id: ID of object to rename
+	:param string name: New name for object
+	
