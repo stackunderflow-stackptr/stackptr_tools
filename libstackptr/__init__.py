@@ -6,7 +6,7 @@ Copyright 2014 Michael Farrell <http://micolous.id.au>
 License: 3-clause BSD, see COPYING
 """
 
-import requests, urlparse, simplejson, datetime, pytz
+import requests, urlparse, simplejson, datetime, pytz, isodate
 
 STACKPTR_URI = 'https://stackptr.com/'
 
@@ -16,7 +16,10 @@ class TrackedUser(object):
 		self._raw = raw_data
 		
 		if 'lastupd' in raw_data and raw_data['lastupd'] not in (None, -1):
-			self._updated = datetime.datetime.now(pytz.utc) - datetime.timedelta(seconds=raw_data['lastupd'])
+			if isinstance(raw_data['lastupd'], int) or isinstance(raw_data['lastupd'], long):
+				self._updated = datetime.datetime.now(pytz.utc) - datetime.timedelta(seconds=raw_data['lastupd'])
+			else:
+				self._updated = isodate.parse_datetime(raw_data['lastupd'])
 		else:
 			# "me" data lacks this info.
 			self._updated = None
@@ -57,7 +60,9 @@ class StackPtrClient(object):
 	:param uri str: Root URI of the stackptr service.  Defaults to the master stackptr instance.
 	
 	"""
-	def __init__(self, api_key, uri=STACKPTR_URI):
+	def __init__(self, api_key, uri=None):
+		if uri is None:
+			uri = STACKPTR_URI
 		self._uri = uri
 		self._api_key = api_key
 

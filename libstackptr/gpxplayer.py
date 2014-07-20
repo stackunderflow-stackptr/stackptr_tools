@@ -59,11 +59,15 @@ def main():
 		nargs='+'
 	)
 
+	parser.add_argument('-u', '--uri',
+		help='URI of stackptr server.'
+	)
+
 	parser.add_argument('-s', '--shuffle', action='store_true')
 
 	options = parser.parse_args()
 
-	client = StackPtrClient(options.api_key)
+	client = StackPtrClient(options.api_key, options.uri)
 	if options.shuffle:
 		random.shuffle(options.gpx_file)
 

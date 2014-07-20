@@ -1,4 +1,4 @@
-# Need SNI support
+# Need SNI support (and libfft-dev)
 # https://github.com/kennethreitz/requests/issues/749#issuecomment-19187417
 pyopenssl>=0.13
 ndg-httpsclient>=0.3.2
@@ -7,4 +7,11 @@ pyasn1>=0.1.6
 # Because fuck urllib
 requests
 
-gpxpy
+# My fork has bug fixes which are required
+git+git://github.com/micolous/gpxpy.git#egg=gpxpy
+
+# Others
+simplejson
+isodate
+pytz
+
