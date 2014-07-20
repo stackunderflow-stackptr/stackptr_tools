@@ -20,9 +20,13 @@ def main():
 		nargs=1
 	)
 	
+	parser.add_argument('-u', '--uri',
+		help='URI of stackptr server.'
+	)
+
 	options = parser.parse_args()
 	
-	client = StackPtrClient(options.api_key)
+	client = StackPtrClient(options.api_key, options.uri)
 	me, following = client.users()
 	
 	print 'My location:'
