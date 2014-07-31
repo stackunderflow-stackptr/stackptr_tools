@@ -4,7 +4,6 @@ pyopenssl>=0.13
 ndg-httpsclient>=0.3.2
 pyasn1>=0.1.6
 
-# Because fuck urllib
 requests
 
 # My fork has bug fixes which are required

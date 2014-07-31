@@ -3,7 +3,7 @@
 Python client library for stackptr
 Copyright 2014 Michael Farrell <http://micolous.id.au>
 
-License: 3-clause BSD, see COPYING
+License: LGPLv3+, see COPYING and COPYING.LESSER
 """
 
 import requests, urlparse, simplejson, datetime, pytz, isodate
