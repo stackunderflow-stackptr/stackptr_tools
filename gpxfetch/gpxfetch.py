@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import bz2
+import zlib
 
 def fetch(tag):
 	page = 1
@@ -44,8 +45,16 @@ def fetch(tag):
 			r = requests.get("https://www.openstreetmap.org/trace/%s/data" % trace)
 			if r.status_code == 200:
 				print "successful"
+				ctype = r.headers.get('content-type')
+				res = ""
+				if ctype == "application/x-bzip2":
+					res = bz2.decompress(r.content)
+				elif ctype == "application/x-gzip":
+					res = zlib.decompress(r.content, zlib.MAX_WBITS | 16)
+				else:
+					print "unknown type %s" % ctype
+					continue
 				f = open(os.path.join("output/",filename), 'w')
-				res = bz2.decompress(r.content)
 				f.write(res)
 				f.close()
 			else:
