@@ -22,6 +22,15 @@ def startgpx(apikey, directory):
 			f.close()
 
 if __name__ == '__main__':
+	if len(sys.argv) == 1:
+		print """Usage instructions:
+./multigpx.py [path to users.json] [path to gpx folder]
+You probably want:
+./multigpx.py ../testusers/users.json ../gpxfetch/output/
+if you used the other tools in this set.
+"""
+		sys.exit()
+	
 	f = open(sys.argv[1], 'r')
 	userlist = json.loads(f.read())
 	#print userlist
