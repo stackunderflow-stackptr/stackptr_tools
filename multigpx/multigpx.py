@@ -6,6 +6,7 @@ import libstackptr, libstackptr.gpxplayer
 from multiprocessing import Process
 import json
 import random
+import time
 
 def startgpx(apikey, directory):
 	client = libstackptr.StackPtrClient(apikey, "http://localhost/")
@@ -32,4 +33,8 @@ if __name__ == '__main__':
 	
 	for user in userlist:
 		p = Process(target=startgpx, args=(user['apikey'],gpxlist))
+		p.daemon = True
 		p.start()
+	
+	while True:
+		time.sleep(30)
