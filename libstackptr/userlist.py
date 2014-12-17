@@ -3,7 +3,7 @@
 Test program for libstackptr
 Copyright 2014 Michael Farrell <http://micolous.id.au>
 
-License: 3-clause BSD, see COPYING
+License: GPLv3+, see COPYING
 """
 
 from __future__ import absolute_import
