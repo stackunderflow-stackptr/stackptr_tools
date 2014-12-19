@@ -12,7 +12,7 @@ from argparse import ArgumentParser, FileType
 import gpxpy, datetime, pytz, time, random, requests
 
 
-def play_gpx(client, gpx_fh):
+def play_gpx(client, gpx_fh, speed=1.0):
 	gpx = gpxpy.parse(gpx_fh)
 	track_seg = gpx.tracks[0].segments[0]
 	prev_point = None
@@ -28,7 +28,7 @@ def play_gpx(client, gpx_fh):
 	offset = start_time - first_point_time
 	for point in points[1:]:
 		# wait until we're ready
-		delta = ((point.time + offset) - datetime.datetime.now(pytz.utc)).total_seconds()
+		delta = ((point.time + offset) - datetime.datetime.now(pytz.utc)).total_seconds() / speed
 		if delta > 0:
 			print 'napping for %.2f second(s)...' % delta
 			time.sleep(delta)
@@ -41,8 +41,6 @@ def play_gpx(client, gpx_fh):
 			print point
 		except requests.exceptions.ConnectionError, e:
 			print 'Failure posting update, %r' % e
-
-
 
 
 def main():
@@ -65,15 +63,36 @@ def main():
 
 	parser.add_argument('-s', '--shuffle', action='store_true')
 
+	parser.add_argument('-S', '--speed',
+		type=float,
+		default=1.0,
+		help='Speed to play the GPX file. 0.5 causes the file to be played at half real-time speed (slower), 2.0 causes the file to be played at double real-time speed (faster).  1.0 is the default (real-time).'
+	)
+
+	parser.add_argument('-i', '--infinite',
+		action='store_true',
+		help='If set, causes the program to run forever until terminated.'
+	)
+
 	options = parser.parse_args()
 
 	client = StackPtrClient(options.api_key, options.uri)
-	if options.shuffle:
-		random.shuffle(options.gpx_file)
 
-	for f in options.gpx_file:
-		print "playing %s" % f
-		play_gpx(client, f)
+	if options.infinite:
+		print 'Playing until the cows come home.'
+
+	while True:
+		if options.shuffle:
+			random.shuffle(options.gpx_file)
+
+		for f in options.gpx_file:
+			print "playing %s" % f
+			play_gpx(client, f, options.speed)
+
+		if not options.infinite:
+			break
+
+		print 'The cows have not come home yet...'
 
 
 if __name__ == '__main__':
