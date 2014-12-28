@@ -9,7 +9,7 @@ import random
 import time
 
 def startgpx(apikey, directory):
-	client = libstackptr.StackPtrClient(apikey, "http://localhost/")
+	client = libstackptr.StackPtrClient(apikey, "http://localhost:8080/")
 	while True:
 		gpxname = random.choice(directory)
 		print "using %s" % gpxname
