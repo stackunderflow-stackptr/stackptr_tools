@@ -21,7 +21,7 @@ follower = Table('follower', metadata, autoload=True)
 session = sessionmaker(bind=db)()
 conn = db.connect()
 
-userlist = [a[1] for a in session.query(users).all()]
+userlist = [a[0] for a in session.query(users).all()]
 
 print userlist
 

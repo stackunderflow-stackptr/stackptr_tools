@@ -7,6 +7,10 @@ from sqlalchemy.orm import sessionmaker
 
 import werkzeug.security
 
+if len(sys.argv) == 1:
+	print "Usage: testusers.py /path/to/stackptr.conf"
+	sys.exit()
+
 import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read(sys.argv[1])
@@ -33,9 +37,9 @@ for i in range(20):
 			'password': random.choice(words) + ("%4i" % random.randint(0,9999)),
 			'apikey': "".join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])}
 	userlist.append(user)
-	conn.execute(users.insert().values(username=user['username'], email=user['email'], 
+	res = conn.execute(users.insert().values(username=user['username'], email=user['email'], 
 									   password=werkzeug.security.generate_password_hash(user['password'])))
-	conn.execute(apikey.insert().values(key=user['apikey'], user=user['username'], name='test'))
+	conn.execute(apikey.insert().values(key=user['apikey'], userid=res.inserted_primary_key[0], name='test'))
 
 f = open("users.json",'w')
 f.write(json.dumps(userlist))
