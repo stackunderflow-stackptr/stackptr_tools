@@ -46,9 +46,9 @@ Update location
 
    :param float lat: Your current latitude.
    :param float lon: Your current longitude.
-   :param float alt: Your current altitude, if known.  Omit parameter if unknown.
-   :param float hdg: Your current heading, if known.  Omit parameter if unknown.
-   :param float spd: Your current speed, if known.  Omit parameter if unknown.
+   :param float alt: Your current altitude, in metres, if known.  Omit parameter if unknown.
+   :param float hdg: Your current heading, in degrees, if known.  Omit parameter if unknown.
+   :param float spd: Your current speed, in metres/second, if known.  Omit parameter if unknown.
    :param string ext: A JSON dict of additional optional information.
 
    In response, the server will send back ``OK``. Anything else indicates an error.
@@ -68,11 +68,25 @@ Users list
    
    The response is encoded as JSON.
    
+   This is returned as a list of :class:`MessageItem`.
+
+.. class:: MessageItem
+
+   Structure for storing messages sent over the wire in ``/users`` calls or WebSockets.
+   
+   .. data:: type
+   
+      The type of message being sent.  This is one of the message types.
+
+   .. data:: data
+   
+      The value of the entity
+   
    ``response['me']``
-      A :class:`TrackedUser` for your user.
+      A :class:`TrackedUser` for your user.  (user-me)
    
    ``response['following']``
-      An array of :class:`TrackedUser` for users that you watch.
+      An array of :class:`TrackedUser` for users that you watch. (user)
 
 
 .. class:: TrackedUser
