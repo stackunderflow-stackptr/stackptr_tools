@@ -48,9 +48,9 @@ Update location
 
    :param float lat: Your current latitude.
    :param float lon: Your current longitude.
-   :param float alt: Your current altitude, if known.  Omit parameter if unknown.
-   :param float hdg: Your current heading, if known.  Omit parameter if unknown.
-   :param float spd: Your current speed, if known.  Omit parameter if unknown.
+   :param float alt: Your current altitude, in metres, if known.  Omit parameter if unknown.
+   :param float hdg: Your current heading, in degrees, if known.  Omit parameter if unknown.
+   :param float spd: Your current speed, in metres/second, if known.  Omit parameter if unknown.
    :param string ext: A JSON dict of additional optional information.
 
    In response, the server will send back ``OK``. Anything else indicates an error.
@@ -80,11 +80,19 @@ User Data
    
    The response is encoded as JSON.
    
-   The response will be a json array with four messages in it.
+   This is returned as a list of :class:`MessageItem`.
+
+.. class:: MessageItem
+
+   Structure for storing messages sent over the wire in ``/users`` calls or WAMP calls.
    
-   Each message is a dictionary with two attributes "type" and "data".
+   .. data:: type
    
-   Type refers to the kind of message and data is defined below
+      The type of message being sent.  This is one of the message types.
+
+   .. data:: data
+   
+      Types of object:
    
    ``user-me``
       A :class:`TrackedUser` for your user.

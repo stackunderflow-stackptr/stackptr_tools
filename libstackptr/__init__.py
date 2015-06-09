@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Python client library for stackptr
-Copyright 2014 Michael Farrell <http://micolous.id.au>
+Copyright 2014-2015 Michael Farrell <http://micolous.id.au>
 
 License: LGPLv3+, see COPYING and COPYING.LESSER
 """
@@ -17,7 +17,7 @@ class TrackedUser(object):
 		
 		if 'lastupd' in raw_data and raw_data['lastupd'] not in (None, -1):
 			if isinstance(raw_data['lastupd'], int) or isinstance(raw_data['lastupd'], long):
-				self._updated = datetime.datetime.now(pytz.utc) - datetime.timedelta(seconds=raw_data['lastupd'])
+				self._updated = datetime.datetime.fromtimestamp(raw_data['lastupd'], pytz.utc)
 			else:
 				self._updated = isodate.parse_datetime(raw_data['lastupd'])
 		else:
@@ -37,7 +37,8 @@ class TrackedUser(object):
 
 	@property
 	def user(self):
-		return self._raw['user']
+		print self._raw
+		return self._raw['username']
 	
 	@property
 	def latitude(self):
@@ -109,5 +110,17 @@ class StackPtrClient(object):
 		"""
 		
 		r = self._req('/users', json=True)
-		
-		return TrackedUser(r['me']), [TrackedUser(x) for x in r['following']]
+		me = None
+		following = []
+		for user in r:
+			if user['type'] == 'user-me':
+				me = TrackedUser(user['data'])
+			elif user['type'] == 'user':
+				if (isinstance(user['data'], dict):
+					# old proto
+					following.append([TrackedUser(x) for x in user['data'].itervalues()])
+				else:
+					# new proto
+					following.append([TrackedUser(x) for x in user['data']])
+		return me, following
+
