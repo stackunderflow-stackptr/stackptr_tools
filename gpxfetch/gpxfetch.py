@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import requests
-from bs4 import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 import os
 import bz2
 import zlib
+import sys
 
 def fetch(tag):
 	page = 1
@@ -47,7 +48,9 @@ def fetch(tag):
 				print "successful"
 				ctype = r.headers.get('content-type')
 				res = ""
-				if ctype == "application/x-bzip2":
+				if ctype == "application/gpx+xml":
+					res = r.content
+				elif ctype == "application/x-bzip2":
 					res = bz2.decompress(r.content)
 				elif ctype == "application/x-gzip":
 					res = zlib.decompress(r.content, zlib.MAX_WBITS | 16)
@@ -62,6 +65,6 @@ def fetch(tag):
 		
 		page += 1
 
-fetch("adelaide")
+fetch(sys.argv[1])
 
 
