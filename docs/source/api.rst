@@ -6,7 +6,17 @@ The API endpoint is located at https://stackptr.com/  All REST requests **must**
 
 Access for HTTP is controlled by an API key.  These can be managed in the web interface at https://stackptr.com/api/
 
-API endpoints will return an array of objects. The messages returned between the HTTPS endpoint 
+When an API call is made, the call will return a number of objects. These objects represent the state updates that resulted from performing that API call.
+
+Most API calls can be made via either the HTTPS or WAMP endpoints (TODO: document which ones, and make the ones that should be available usable on both)
+
+In addition to the API calls, you can also connect via the WAMP transport and receive location updates pushed directly to your client instead of polling the ``/users`` endpoint repeatedly.
+
+It is recommended that the application simply implement generic parsers for each type of message, instead of for each API call, as some endpoints return the same message types.
+
+
+Format specifics
+================
 
 API keys are passed with the GET or POST parameter ``apikey``.  All calls require this key unless otherwise specified.
 
@@ -67,8 +77,12 @@ WAMP Connections
 ==========
 
 .. function:: POST /ws_uid
-   
+
+   Returns your current UID (i.e. the UID that you should authenticate to the WAMP server as).
+
 .. function:: POST /ws_token
+   
+   Returns a token used in the challenge/response WAMP authentication.
 
 
 User Data
