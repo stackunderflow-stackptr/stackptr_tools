@@ -116,7 +116,7 @@ class StackPtrClient(object):
 			if user['type'] == 'user-me':
 				me = TrackedUser(user['data'])
 			elif user['type'] == 'user':
-				if (isinstance(user['data'], dict):
+				if (isinstance(user['data'], dict)):
 					# old proto
 					following.append([TrackedUser(x) for x in user['data'].itervalues()])
 				else:
