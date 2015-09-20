@@ -45,10 +45,14 @@ CSRF
 
 .. function:: GET /csrf
 
-	Returns a CSRF token. All requests made with API keys are exempt from CSRF checks, so you'll only need this to POST to /login and create an API key for your app yourself.
-	
-	Note: This will be replaced with something better and this function will be removed in future.
+	Returns a CSRF token. All requests made with API keys are exempt from CSRF checks, so you will not usually need this.
 
+   The Android app uses this to POST to /login, get a session and create an API key automatically for you.
+
+   The Web UI uses this before the post to /ws_token as the CSRF token obtained when the page first loaded may be expired if the websocket connection drops and reconnects a long time after the page first loaded.
+
+   This endpoint does not support CORS for obvious reasons.
+	
 Update location
 ===============
 
@@ -137,6 +141,16 @@ User Data
 
 
 .. function:: GET /lochist
+
+   Get the specified user's location history.
+
+   :param int uid: The user you want to get the location history of. If not specified, will fetch your own.
+
+   Returns a message of type ``lochist``, with the data containing ``id`` and ``lochist``. ``lochist`` in this is an array of dictionaries containing ``lat`` and ``lng`` objects. This array is ordered from least recent to most recent.
+
+   Returns "Permission Denied" if you fetch a user that is not in your user list.
+
+   Your application should fetch this only once upon first load, and then append to this list itself instead of repeatedly fetching this endpoint.
 
 User Management
 ==========
