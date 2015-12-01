@@ -92,7 +92,7 @@ WAMP Connections
 User Data
 ==========
 
-.. function:: GET /users
+.. function:: GET /users | com.stackptr.api.userList
 
    Gets a list of users on stackptr and their current locations.
    
@@ -152,26 +152,91 @@ User Data
 
    Your application should fetch this only once upon first load, and then append to this list itself instead of repeatedly fetching this endpoint.
 
+.. function:: GET /lochist | com.stackptr.api.lochist
+   
+   Get (at the moment, last 24 hours of) location history for a user
+   
+   :param int target: User ID to get history for
+
+
 User Management
-==========
+===============
 
-.. function:: POST /acceptuser
+.. function:: POST /adduser | com.stackptr.api.addUser
+   
+   Request permission to see a user's location. Grants them permission to see yours.
 
-.. function:: POST /adduser
+   :param int uid: User ID to add
 
-.. function:: POST /deluser
+.. function:: POST /acceptuser | com.stackptr.api.acceptUser
+
+   Accept another user's add request
+
+   :param int uid: User ID to accept
+
+.. function:: POST /deluser | com.stackptr.api.delUser
+
+   Delete a user from your contact list and you from theirs
+
+   :param int uid: User ID to delete
 
 
 Group Data
 ==========
 
-.. function:: GET /grouplist
+.. function:: GET /grouplist | com.stackptr.api.groupList
 
-.. function:: POST /groupdata
+   Get the list of groups the user is in
+
+.. class:: Group
+
+   Structure for grouplist responses
+
+   .. data:: name
+
+      Name of the group
+
+   .. data:: id
+      
+      ID of the group
+
+   .. data:: description
+
+      Description of the group
+
+   .. data:: status
+
+      0 = open to join via group discovery
+      1 = require owner approval to join
+
+   .. data:: members
+
+      List of members in the group, containing username, icon, id, role
+
+      Role:
+      1 = member
+      2 = administrator
+
+.. function:: GET /groupdiscover | com.stackptr.api.groupDiscover
+   
+   Gets a list of groups that are open for public discovery and that you are not already in.
+
+.. function:: POST /creategroup | com.stackptr.api.createGroup
+
+.. function:: POST /joingroup | com.stackptr.api.joinGroup
+
+.. function:: POST /leavegroup | com.stackptr.api.leaveGroup
+
+.. function:: POST /deletegroup | com.stackptr.api.deleteGroup
+
+.. function:: POST /updategroup | com.stackptr.api.updateGroup
+
+
+.. function:: POST /groupdata | com.stackptr.api.groupData
 	
 	Gets a dict of the data (placemarks etc) for a group. The key for the dict is the object's ID (unique across all groups) and the value is a :class:`GroupData` item.
 	
-	:param int group: The group ID you want data for (not implemented yet, there is only one group)
+	:param int gid: The group ID you want data for
 	
 .. class:: GroupData
 
@@ -189,23 +254,30 @@ Group Data
 	
 	GeoJSON representing the object as it is to be drawn on the map.
 
-.. function:: POST /addfeature
+.. function:: POST /addfeature | com.stackptr.api.addFeature
 	
 	Adds a new item to the group.
 	
 	:param string name: Name for object (not implemented yet, defaults to untitled)
 	:param string geojson: GeoJSON representation of the object
 
-.. function:: POST /delfeature
+.. function:: POST /delfeature | com.stackptr.api.deleteFeature
 	
 	Deletes an item in the group.
 	
-	:param int id: ID of object to delete
+	:param int fid: ID of object to delete
 
-.. function:: POST /renamefeature
+.. function:: POST /editfeature | com.stackptr.api.editFeature
+
+   Edits the geometry of an item in the group.
+   
+   :param int fid: ID of object to rename
+   :param string gjson: new geoJSON of object
+
+.. function:: POST /renamefeature | com.stackptr.api.renameFeature
 
 	Renames an item in the group.
 	
-	:param int id: ID of object to rename
+	:param int fid: ID of object to rename
 	:param string name: New name for object
 	
