@@ -28,17 +28,27 @@ Heading is passed in degrees, with north being 0/360 degrees.
 
 Speed is reported in metres per second at ground level.
 
-Test endpoint
+Test endpoints
 =============
 
 .. function:: GET /test
 
    Tests connectivity and authentication to the stackptr API.
    
-   Useful to see if the API key provided to your app is correct.
-
    Note: Currently returns the username that the API key is for, but this endpoint is likely to be removed and replaced with something better.
 
+
+.. function:: POST /uid
+
+   Tests connectivity and authentication to the stackptr API.
+   
+   Useful to see if the API key provided to your app is correct.
+
+   Returns a JSON dictionary consisting of:
+
+   :param int id: Your numerical uid
+   :param string username: Your username
+   :param string icon: The user's gravatar.
 
 CSRF
 ====
@@ -166,7 +176,7 @@ User Management
    
    Request permission to see a user's location. Grants them permission to see yours.
 
-   :param int uid: User ID to add
+   :param int user: Username or email address of user to add
 
 .. function:: POST /acceptuser | com.stackptr.api.acceptUser
 
