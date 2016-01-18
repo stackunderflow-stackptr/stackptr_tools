@@ -31,13 +31,6 @@ Speed is reported in metres per second at ground level.
 Test endpoints
 =============
 
-.. function:: GET /test
-
-   Tests connectivity and authentication to the stackptr API.
-   
-   Note: Currently returns the username that the API key is for, but this endpoint is likely to be removed and replaced with something better.
-
-
 .. function:: POST /uid
 
    Tests connectivity and authentication to the stackptr API.
@@ -48,7 +41,7 @@ Test endpoints
 
    :param int id: Your numerical uid
    :param string username: Your username
-   :param string icon: The user's gravatar.
+   :param string icon: The user's gravatar (in 256x256).
 
 CSRF
 ====
@@ -141,7 +134,7 @@ User Data
    
    :param array loc: Array containing ``[latitude, longitude]`` containing the current location of the user.
    :param string username: The username of the tracked user.
-   :param string icon: URI of the avatar for the user.
+   :param string icon: URI of the avatar for the user (64x64).
    :param string lastupd: Time of last update, in seconds since UNIX epoch in UTC.
    :param string alt: Altitude of the user in metres above sea level.
    :param string extra: A dictionary of :class:`Extra` information about the user.
@@ -150,7 +143,7 @@ User Data
    :param string spd: Speed of the user
 
 
-.. function:: GET /lochist
+.. function:: GET /lochist | com.stackptr.api.lochist
 
    Get the specified user's location history.
 
@@ -162,11 +155,6 @@ User Data
 
    Your application should fetch this only once upon first load, and then append to this list itself instead of repeatedly fetching this endpoint.
 
-.. function:: GET /lochist | com.stackptr.api.lochist
-   
-   Get (at the moment, last 24 hours of) location history for a user
-   
-   :param int target: User ID to get history for
 
 
 User Management
@@ -233,20 +221,43 @@ Group Data
 
 .. function:: POST /creategroup | com.stackptr.api.createGroup
 
+   Create a new group.
+
+   :param string name: Name for group
+   :param string description: Description for group
+   :param string status: 0 if others can discover group, 1 for private group.
+
 .. function:: POST /joingroup | com.stackptr.api.joinGroup
+
+   :param string gid: ID of group to join
 
 .. function:: POST /leavegroup | com.stackptr.api.leaveGroup
 
+   :param string gid: ID of group to leave. You can't leave a group that you are the sole admin of.
+
 .. function:: POST /deletegroup | com.stackptr.api.deleteGroup
+
+   :param string gid: ID of group to delete. You must be an admin.
 
 .. function:: POST /updategroup | com.stackptr.api.updateGroup
 
+   :param string name: Name for group
+   :param string description: Description for group
+   :param string status: 0 if others can discover group, 1 for private group.
+   :param string gid: Group ID
+
+.. function:: POST /groupusermod | com.stackptr.api.groupUserMod
+ 
+   :param string gid: ID of group
+   :param string uid: ID of user
+   :param string user: Alternatively specify user by username or email.
+   :param string role: New role for user. 0 to delete user, 1 to demote to regular user, 2 to promote to admin.
 
 .. function:: POST /groupdata | com.stackptr.api.groupData
 	
 	Gets a dict of the data (placemarks etc) for a group. The key for the dict is the object's ID (unique across all groups) and the value is a :class:`GroupData` item.
 	
-	:param int gid: The group ID you want data for
+	:param int gid: The group ID you want data for.
 	
 .. class:: GroupData
 
@@ -268,7 +279,8 @@ Group Data
 	
 	Adds a new item to the group.
 	
-	:param string name: Name for object (not implemented yet, defaults to untitled)
+	:param string name: Name for object
+   :param string group: Group id to add feature to
 	:param string geojson: GeoJSON representation of the object
 
 .. function:: POST /delfeature | com.stackptr.api.deleteFeature
@@ -291,3 +303,16 @@ Group Data
 	:param int fid: ID of object to rename
 	:param string name: New name for object
 	
+.. function::  | com.stackptr.api.setSharedToGroup
+
+   Start or stop sharing to a group.
+
+   :param string gid: ID of group
+   :param string share: 1 to start sharing to group, 0 to stop sharing
+
+.. function::  | com.stackptr.api.sharedGroupLocs
+   
+   Get the locations of group members sharing to the group.
+
+   :param string gid: ID of group
+
