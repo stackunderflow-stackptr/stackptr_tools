@@ -171,7 +171,7 @@ User Management
    
    Request permission to see a user's location. Grants them permission to see yours.
 
-   :param int user: Username or email address of user to add
+   :param string user: Username or email address of user to add
 
 .. function:: POST /acceptuser | com.stackptr.api.acceptUser
 
@@ -285,10 +285,10 @@ Group Data
 .. function:: POST /addfeature | com.stackptr.api.addFeature
 	
 	Adds a new item to the group.
-	
-	:param string name: Name for object
+
+   :param string name: Name for object
    :param string group: Group id to add feature to
-	:param string geojson: GeoJSON representation of the object
+   :param string geojson: GeoJSON representation of the object
 
 .. function:: POST /delfeature | com.stackptr.api.deleteFeature
 	
