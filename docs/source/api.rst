@@ -288,7 +288,7 @@ Group Data
 
    :param string name: Name for object
    :param string group: Group id to add feature to
-   :param string geojson: GeoJSON representation of the object
+   :param string gjson: GeoJSON representation of the object
 
 .. function:: POST /delfeature | com.stackptr.api.deleteFeature
 	
