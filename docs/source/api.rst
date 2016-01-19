@@ -18,7 +18,7 @@ It is recommended that the application simply implement generic parsers for each
 Swagger
 =======
 
-There is a [Swagger](http://swagger.io/) instance running at https://stackptr.com/swagger/ that allows you to experiment with the API.
+There is a `Swagger<http://swagger.io/>` instance running at https://stackptr.com/swagger/ that allows you to experiment with the API.
 
 
 Format specifics
