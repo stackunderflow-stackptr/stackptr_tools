@@ -15,6 +15,12 @@ In addition to the API calls, you can also connect via the WAMP transport and re
 It is recommended that the application simply implement generic parsers for each type of message, instead of for each API call, as some endpoints return the same message types.
 
 
+Swagger
+=======
+
+There is a [Swagger](http://swagger.io/) instance running at https://stackptr.com/swagger/ that allows you to experiment with the API.
+
+
 Format specifics
 ================
 
