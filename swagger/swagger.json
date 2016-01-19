@@ -1,0 +1,817 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "StackPtr",
+        "description": "API for StackPtr",
+        "version": "1.0.0"
+    },
+    "host": "stackptr.com",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "parameters": {
+        "apikey": {
+            "in": "formData",
+            "name": "apikey",
+            "description": "API Key",
+            "required": true,
+            "type": "string"
+        },
+        "apikeyget": {
+            "in": "query",
+            "name": "apikey",
+            "description": "API Key",
+            "required": true,
+            "type": "string"
+        }
+    },
+    "paths": {
+        "/uid": {
+            "post": {
+                "summary": "Tests StackPtr",
+                "description": "Tests connectivity and authentication to the stackptr API.\n",
+                "tags": [
+                    "Tests"
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An object",
+                        "schema": {
+                            "$ref": "#/definitions/UID"
+                        }
+                    }
+                }
+            }
+        },
+        "/csrf": {
+            "get": {
+                "summary": "Gets CSRF token",
+                "description": "The Android app uses this to POST to /login, get a session and create an API key automatically for you.\n\nThe Web UI uses this before the post to /ws_token as the CSRF token obtained when the page first loaded may be expired if the websocket connection drops and reconnects a long time after the page first loaded.\n\nThis endpoint does not support CORS for obvious reasons.\n",
+                "tags": [
+                    "Login"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/apikeyget"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "String of CSRF token"
+                    }
+                }
+            }
+        },
+        "/update": {
+            "post": {
+                "summary": "Update Location",
+                "description": "Updates your current location, using (ideally) data from your GPS receiver. Do not report a location if your location is not known.\n",
+                "tags": [
+                    "Location"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "type": "number",
+                        "description": "Your current latitude.",
+                        "required": true,
+                        "in": "formData"
+                    },
+                    {
+                        "name": "lon",
+                        "type": "number",
+                        "description": "Your current longitude.",
+                        "required": true,
+                        "in": "formData"
+                    },
+                    {
+                        "name": "alt",
+                        "type": "number",
+                        "description": "Your current altitude, in metres.",
+                        "required": false,
+                        "in": "formData"
+                    },
+                    {
+                        "name": "hdg",
+                        "type": "number",
+                        "description": "Your current heading, in degrees.",
+                        "required": false,
+                        "in": "formData"
+                    },
+                    {
+                        "name": "spd",
+                        "type": "number",
+                        "description": "Your current speed, in metres/second",
+                        "required": false,
+                        "in": "formData"
+                    },
+                    {
+                        "name": "ext",
+                        "type": "string",
+                        "description": "A JSON dict of additional optional information.",
+                        "required": false,
+                        "in": "formData"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responds back OK"
+                    }
+                }
+            }
+        },
+        "/ws_token": {
+            "post": {
+                "summary": "Get Token for WAMP",
+                "produces": [
+                    "text/html"
+                ],
+                "description": "Returns a token used in the challenge/response WAMP authentication.\n",
+                "tags": [
+                    "Login"
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responds back with token"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "summary": "Gets a list of users on stackptr and their current locations.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Location"
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/apikeyget"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responds back with objet",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    }
+                }
+            }
+        },
+        "/lochist": {
+            "get": {
+                "summary": "Get the specified user’s location history.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Location"
+                ],
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "type": "string",
+                        "in": "query",
+                        "description": "If not specified will grab own history"
+                    },
+                    {
+                        "$ref": "#/parameters/apikeyget"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Location History",
+                        "schema": {
+                            "$ref": "#/definitions/LocHist"
+                        }
+                    }
+                }
+            }
+        },
+        "/adduser": {
+            "post": {
+                "summary": "Request permission to see a user’s location. Grants them permission to see yours.",
+                "tags": [
+                    "Users"
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "user",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Username or email address of user to add",
+                        "required": true
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/acceptuser": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Accept another user’s add request",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "type": "number",
+                        "in": "formData",
+                        "required": true,
+                        "description": "User ID to accept"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/deluser": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Delete a user from your contact list and you from theirs",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "type": "number",
+                        "in": "formData",
+                        "description": "User ID to delete",
+                        "required": true
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/grouplist": {
+            "get": {
+                "summary": "Get the list of groups the user is in",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/apikeyget"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns a list of groups"
+                    }
+                }
+            }
+        },
+        "/groupdiscover": {
+            "get": {
+                "summary": "Gets a list of groups that are open for public discovery and that you are not already in.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/apikeyget"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of groups that user is not already in"
+                    }
+                }
+            }
+        },
+        "/creategroup": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Create a new group.",
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Name for group"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Description for group"
+                    },
+                    {
+                        "name": "status",
+                        "type": "number",
+                        "in": "formData",
+                        "description": "0 if others can discover, 1 for private group"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/joingroup": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Joins a group",
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "gid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of group to join"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/leavegroup": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Leaves a group",
+                "description": "You can’t leave a group that you are the sole admin of.",
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "gid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of group to leave."
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/deletegroup": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Deletes a group",
+                "description": "Must be admin of the group to delete it.",
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "gid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of group to delete."
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/updategroup": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Updates a group.",
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "gid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of group to update."
+                    },
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Name for group"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Description for group"
+                    },
+                    {
+                        "name": "status",
+                        "type": "number",
+                        "in": "formData",
+                        "description": "0 if others can discover, 1 for private group"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/groupusermod": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Updates a users role in a group",
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "gid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of group."
+                    },
+                    {
+                        "name": "uid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of user"
+                    },
+                    {
+                        "name": "user",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Username or email if ID of user isn't present"
+                    },
+                    {
+                        "name": "role",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "New role for user. 0 to delete user, 1 to demote to regular user, 2 to promote to admin."
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/groupdata": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets group data (placemarks)",
+                "description": "Gets a dict of the data (placemarks etc) for a group. The key for the dict is the object’s ID (unique across all groups) and the value is a GroupData item.",
+                "tags": [
+                    "Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "gid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of group to delete."
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/addfeature": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Adds a new item to the group.",
+                "tags": [
+                    "Groups",
+                    "Features"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Name for the object"
+                    },
+                    {
+                        "name": "group",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Group ID to add feature to"
+                    },
+                    {
+                        "name": "geojson",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "GeoJSON of object being added"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/delfeature": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Deletes an item in the group.",
+                "tags": [
+                    "Groups",
+                    "Features"
+                ],
+                "parameters": [
+                    {
+                        "name": "fid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of object to delete"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/editfeature": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Edits the geometry of an item in the group.",
+                "tags": [
+                    "Groups",
+                    "Features"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Name for the object"
+                    },
+                    {
+                        "name": "group",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "Group ID to add feature to"
+                    },
+                    {
+                        "name": "gjson",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "GeoJSON of object being added"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/renamefeature": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "summary": "Renames an item in the group.",
+                "tags": [
+                    "Groups",
+                    "Features"
+                ],
+                "parameters": [
+                    {
+                        "name": "fid",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "ID of object to rename"
+                    },
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "in": "formData",
+                        "description": "New name for object"
+                    },
+                    {
+                        "$ref": "#/parameters/apikey"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "UID": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "description": "Your numerical uid"
+                },
+                "username": {
+                    "type": "string",
+                    "description": "Your username"
+                },
+                "icon": {
+                    "type": "string",
+                    "description": "URL to users gravatar"
+                }
+            }
+        },
+        "Users": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "Data type - eg user, user-me, user-pending, user-request"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "LocHist": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "Contains lochist"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "lochist": {
+                                    "type": "object",
+                                    "properties": {
+                                        "lat": {
+                                            "type": "number",
+                                            "description": "Latitude"
+                                        },
+                                        "lng": {
+                                            "type": "number",
+                                            "description": "Longitude"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
