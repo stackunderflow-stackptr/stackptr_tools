@@ -1,6 +1,6 @@
 set -euxo pipefail
 
-export PG_CONF_PATH = /etc/postgresql/9.5/main/
+PG_CONF_PATH=/etc/postgresql/9.5/main/
 
 sed -i -e"s/^#max_connections = .*$/max_connections = 250/" $PG_CONF_PATH/postgresql.conf
 sed -i -e"s/^#shared_buffers = .*$/shared_buffers = 1GB/" $PG_CONF_PATH/postgresql.conf
