@@ -11,11 +11,11 @@ OPTIONS=(	1 "Update Debian and install required utilities"
 			7 "Imposm initial read"
 			8 "Imposm import into database"
 			9 "Imposm optimise and deploy"
-			10 "Exit")
+			)
 
 while true
 do
-	CHOICE=$(dialog --clear --backtitle "StackPtr Deploy" --menu "Choose a task:" 24 80 12 "${OPTIONS[@]}" 2>&1 >/dev/tty)
+	CHOICE=$(dialog --clear --backtitle "StackPtr Deploy" --menu "Choose a task:" 20 80 11 "${OPTIONS[@]}" 2>&1 >/dev/tty)
 	clear
 
 	case $CHOICE in
@@ -28,6 +28,5 @@ do
 		7) bash scripts/07-imposm3-read.sh ;;
 		8) bash scripts/08-imposm3-import.sh ;;
 		9) bash scripts/09-imposm3-deploy.sh ;;
-		10) exit ;;
 	esac
 done
