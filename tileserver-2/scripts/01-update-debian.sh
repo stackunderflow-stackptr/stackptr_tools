@@ -7,4 +7,4 @@ apt-get update
 apt-get -y dist-upgrade
 apt-get -y install git vim sudo postgresql-9.5-postgis-2.2 postgresql-contrib-9.5 build-essential screen axel htop mosh ethtool rsync golang libgeos-dev libleveldb-dev
 
-adduser osm --disabled-password || true
+useradd osm || true

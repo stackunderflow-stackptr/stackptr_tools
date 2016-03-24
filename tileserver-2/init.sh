@@ -5,7 +5,7 @@ if [ $EUID -ne 0 ]
 	exit
 fi
 
-apt-get -y install git
+apt-get -y install git dialog
 
 git clone https://github.com/stackunderflow-stackptr/stackptr_tools.git
 
