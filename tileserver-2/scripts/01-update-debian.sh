@@ -3,4 +3,4 @@ echo "deb-src http://mirror.internode.on.net/pub/debian/ testing main" >> /etc/a
 
 apt-get update
 apt-get -y dist-upgrade
-#apt-get -y install git vim sudo postgresql-9.5-postgis-2.2 postgresql-contrib-9.5 build-essential screen axel htop mosh ethtool
+apt-get -y install git vim sudo postgresql-9.5-postgis-2.2 postgresql-contrib-9.5 build-essential screen axel htop mosh ethtool
