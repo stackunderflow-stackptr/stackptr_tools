@@ -12,7 +12,7 @@ OPTIONS=(	1 "Update Debian and install required utilities"
 			8 "Imposm import into database"
 			9 "Imposm optimise and deploy")
 
-CHOICE=$(dialog --clear --backtitle "StackPtr Deploy" --menu "Choose a task:" 15 40 4 "${OPTIONS[@]}" 2>&1 >/dev/tty)
+CHOICE=$(dialog --clear --backtitle "StackPtr Deploy" --menu "Choose a task:" 15 40 9 "${OPTIONS[@]}" 2>&1 >/dev/tty)
 clear
 
 case $CHOICE in
