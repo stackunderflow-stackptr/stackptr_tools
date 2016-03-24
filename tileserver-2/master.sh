@@ -3,7 +3,7 @@ set -euxo pipefail
 apt-get -y install dialog
 
 OPTIONS=(	1 "Update Debian and install required utilities"
-			2 "Postgres - apply tuning"
+			2 "Postgres - apply import tuning"
 			3 "Postgres - create database"
 			4 "Download OSM data"
 			5 "Setup internal net for Vultr hosts"
