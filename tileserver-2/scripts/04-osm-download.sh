@@ -4,5 +4,4 @@ cat > /tmp/download.sh << EOF
 	axel -n 8 http://download.geofabrik.de/australia-oceania/australia-latest.osm.pbf
 EOF
 
-su osm -c "bash /tmp/download.sh"
-read -p "press enter..."
+su osm -c "bash /tmp/download.sh || read -p 'press enter...'" 

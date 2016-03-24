@@ -10,5 +10,4 @@ cat > /tmp/imposm3-install.sh << EOF
 	go install github.com/omniscale/imposm3
 EOF
 
-su osm -c "bash /tmp/imposm3-install.sh"
-read -p "press enter..."
+su osm -c "bash /tmp/imposm3-install.sh || read -p 'press enter...'" 
