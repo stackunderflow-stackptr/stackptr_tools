@@ -8,4 +8,4 @@ cat > /tmp/postgres.sh << EOF
 	echo "ALTER USER osm WITH PASSWORD 'osm';" | psql -d osm
 EOF
 
-su osm -c "bash /tmp/postgres.sh" 
+su postgres -c "bash /tmp/postgres.sh" 
