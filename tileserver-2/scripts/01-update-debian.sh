@@ -8,3 +8,5 @@ apt-get -y dist-upgrade
 apt-get -y install git vim sudo postgresql-9.5-postgis-2.2 postgresql-contrib-9.5 build-essential screen axel htop mosh ethtool rsync golang libgeos-dev libleveldb-dev
 
 useradd osm || true
+mkdir /home/osm || true
+chown -R osm:osm /home/osm
