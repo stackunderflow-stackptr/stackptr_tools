@@ -29,4 +29,6 @@ do
 		8) bash scripts/08-imposm3-import.sh ;;
 		9) bash scripts/09-imposm3-deploy.sh ;;
 	esac
+
+	read -p 'press enter to return to menu...'
 done
