@@ -15,7 +15,7 @@ CHOICE=0
 
 while true
 do
-	CHOICE=$(dialog --clear --backtitle "StackPtr Deploy" --default-item \'$((CHOICE+1))\' --menu "Choose a task:" 20 80 11 "${OPTIONS[@]}" 2>&1 >/dev/tty)
+	CHOICE=$(dialog --clear --backtitle "StackPtr Deploy" --default-item $((CHOICE+1)) --menu "Choose a task:" 20 80 11 "${OPTIONS[@]}" 2>&1 >/dev/tty)
 	clear
 
 	case $CHOICE in
