@@ -11,9 +11,11 @@ OPTIONS=(	1 "Update Debian and install required utilities"
 			9 "Imposm optimise and deploy"
 			)
 
+CHOICE=0
+
 while true
 do
-	CHOICE=$(dialog --clear --backtitle "StackPtr Deploy" --menu "Choose a task:" 20 80 11 "${OPTIONS[@]}" 2>&1 >/dev/tty)
+	CHOICE=$(dialog --clear --backtitle "StackPtr Deploy" --menu "Choose a task:" 20 80 11 "${OPTIONS[@]}" --default-item $((CHOICE+1)) 2>&1 >/dev/tty)
 	clear
 
 	case $CHOICE in

@@ -1,3 +1,5 @@
+# https://goo.gl/OY7TL0
+
 set -euxo pipefail
 
 if [ $EUID -ne 0 ]
