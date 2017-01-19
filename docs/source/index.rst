@@ -6,8 +6,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   deployment
    api
+   deployment_info
+   deployment_from_scratch
+
 
 
 

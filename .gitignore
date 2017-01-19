@@ -16,3 +16,6 @@ docs/_build
 env/
 output/
 users.json
+mapstyle-2.0/shape/*land*
+mapstyle-2.0/shape/ne*
+*.tar.bz2
